@@ -5,14 +5,8 @@ LABEL maintainer="your-email@example.com"
 LABEL description="GitLab CI image with JDK17, Maven, Gradle, Node.js (offline install) and proxy configs"
 
 # ==========================================
-# 声明版本号变量，可外部传入
-# ==========================================
-ARG MAVEN_VERSION=3.9.6
-ARG GRADLE_VERSION=8.7
-ARG NODE_VERSION=20.11.1
-
-# ==========================================
-# 1. 安装常用系统工具
+# 1. 安装常用系统工具 (仍为在线安装，但基础镜像通常预装了 curl/wget)
+# 如确需完全离线，可去掉此步骤或使用预构建基础镜像
 # ==========================================
 RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
@@ -31,44 +25,41 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
 # ==========================================
-# 2. 复制离线安装包（版本由 ARG 决定）
+# 2. 离线安装 Maven (假设安装包 apache-maven-3.9.6-bin.tar.gz 已在构建目录)
 # ==========================================
-# COPY 指令需要再次声明 ARG 以使其可见
-ARG MAVEN_VERSION
-ARG GRADLE_VERSION
-ARG NODE_VERSION
-
-COPY apache-maven-${MAVEN_VERSION}-bin.tar.gz /tmp/
-COPY gradle-${GRADLE_VERSION}-bin.zip /tmp/
-COPY node-v${NODE_VERSION}-linux-x64.tar.xz /tmp/
+COPY apache-maven-3.9.6-bin.tar.gz /tmp/
+RUN tar xzf /tmp/apache-maven-3.9.6-bin.tar.gz -C /opt \
+    && mv /opt/apache-maven-3.9.6 /opt/maven \
+    && rm /tmp/apache-maven-3.9.6-bin.tar.gz
 
 # ==========================================
-# 3. 离线安装 Maven / Gradle / Node.js
+# 3. 离线安装 Gradle (假设 gradle-8.7-bin.zip 已在构建目录)
 # ==========================================
-# RUN 指令也需要再次声明 ARG
-ARG MAVEN_VERSION
-ARG GRADLE_VERSION
-ARG NODE_VERSION
-
-RUN tar xzf /tmp/apache-maven-${MAVEN_VERSION}-bin.tar.gz -C /opt \
-    && mv /opt/apache-maven-${MAVEN_VERSION} /opt/maven \
-    && rm /tmp/apache-maven-${MAVEN_VERSION}-bin.tar.gz \
-    && unzip -q /tmp/gradle-${GRADLE_VERSION}-bin.zip -d /opt \
-    && mv /opt/gradle-${GRADLE_VERSION} /opt/gradle \
-    && rm /tmp/gradle-${GRADLE_VERSION}-bin.zip \
-    && tar xJf /tmp/node-v${NODE_VERSION}-linux-x64.tar.xz -C /opt \
-    && mv /opt/node-v${NODE_VERSION}-linux-x64 /opt/node \
-    && rm /tmp/node-v${NODE_VERSION}-linux-x64.tar.xz
+COPY gradle-8.7-bin.zip /tmp/
+RUN unzip -q /tmp/gradle-8.7-bin.zip -d /opt \
+    && mv /opt/gradle-8.7 /opt/gradle \
+    && rm /tmp/gradle-8.7-bin.zip
 
 # ==========================================
-# 4. 复制 Maven 与 npm 代理配置文件
+# 4. 离线安装 Node.js (假设 node-v20.11.1-linux-x64.tar.xz 已在构建目录)
 # ==========================================
+COPY node-v20.11.1-linux-x64.tar.xz /tmp/
+RUN tar xJf /tmp/node-v20.11.1-linux-x64.tar.xz -C /opt \
+    && mv /opt/node-v20.11.1-linux-x64 /opt/node \
+    && rm /tmp/node-v20.11.1-linux-x64.tar.xz
+
+# ==========================================
+# 5. 以文件形式覆盖 Maven 与 npm 代理配置
+# ==========================================
+# 提前创建目标目录
 RUN mkdir -p /root/.m2
+
+# 将提前准备好的 settings.xml 和 .npmrc 复制到容器中
 COPY settings.xml /root/.m2/settings.xml
 COPY .npmrc /root/.npmrc
 
 # ==========================================
-# 5. 设置环境变量（路径固定，不依赖版本号）
+# 6. 统一设置环境变量
 # ==========================================
 ENV MAVEN_HOME=/opt/maven
 ENV GRADLE_HOME=/opt/gradle
@@ -77,7 +68,7 @@ ENV NODE_HOME=/opt/node
 ENV PATH="${MAVEN_HOME}/bin:${GRADLE_HOME}/bin:${NODE_HOME}/bin:${PATH}"
 
 # ==========================================
-# 6. 验证安装
+# 7. 验证安装
 # ==========================================
 RUN java -version \
     && mvn --version \
