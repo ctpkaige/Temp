@@ -1,8 +1,13 @@
 # 基础镜像：官方 JDK17 (Ubuntu 22.04)
 FROM eclipse-temurin:17-jdk-jammy
 
-LABEL maintainer="your-email@example.com"
+LABEL maintainer="tp.cheng@samsung.com"
 LABEL description="GitLab CI image with JDK17, Maven, Gradle, Node.js (offline install) and proxy configs"
+
+# ================= 版本参数 =================
+ARG MAVEN_VERSION=3.9.15
+ARG GRADLE_VERSION=9.4.1
+ARG NODE_VERSION=20.20.2
 
 # ==========================================
 # 1. 安装常用系统工具 (仍为在线安装，但基础镜像通常预装了 curl/wget)
@@ -25,28 +30,28 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
 # ==========================================
-# 2. 离线安装 Maven (假设安装包 apache-maven-3.9.6-bin.tar.gz 已在构建目录)
+# 2. 离线安装 Maven
 # ==========================================
-COPY apache-maven-3.9.6-bin.tar.gz /tmp/
-RUN tar xzf /tmp/apache-maven-3.9.6-bin.tar.gz -C /opt \
-    && mv /opt/apache-maven-3.9.6 /opt/maven \
-    && rm /tmp/apache-maven-3.9.6-bin.tar.gz
+COPY apache-maven-${MAVEN_VERSION}-bin.tar.gz /tmp/
+RUN tar xzf /tmp/apache-maven-${MAVEN_VERSION}-bin.tar.gz -C /opt \
+    && mv /opt/apache-maven-${MAVEN_VERSION} /opt/maven \
+    && rm /tmp/apache-maven-${MAVEN_VERSION}-bin.tar.gz
 
 # ==========================================
-# 3. 离线安装 Gradle (假设 gradle-8.7-bin.zip 已在构建目录)
+# 3. 离线安装 Gradle
 # ==========================================
-COPY gradle-8.7-bin.zip /tmp/
-RUN unzip -q /tmp/gradle-8.7-bin.zip -d /opt \
-    && mv /opt/gradle-8.7 /opt/gradle \
-    && rm /tmp/gradle-8.7-bin.zip
+COPY gradle-${GRADLE_VERSION}-bin.zip /tmp/
+RUN unzip -q /tmp/gradle-${GRADLE_VERSION}-bin.zip -d /opt \
+    && mv /opt/gradle-${GRADLE_VERSION} /opt/gradle \
+    && rm /tmp/gradle-${GRADLE_VERSION}-bin.zip
 
 # ==========================================
-# 4. 离线安装 Node.js (假设 node-v20.11.1-linux-x64.tar.xz 已在构建目录)
+# 4. 离线安装 Node.js
 # ==========================================
-COPY node-v20.11.1-linux-x64.tar.xz /tmp/
-RUN tar xJf /tmp/node-v20.11.1-linux-x64.tar.xz -C /opt \
-    && mv /opt/node-v20.11.1-linux-x64 /opt/node \
-    && rm /tmp/node-v20.11.1-linux-x64.tar.xz
+COPY node-v${NODE_VERSION}-linux-x64.tar.xz /tmp/
+RUN tar xJf /tmp/node-v${NODE_VERSION}-linux-x64.tar.xz -C /opt \
+    && mv /opt/node-v${NODE_VERSION}-linux-x64 /opt/node \
+    && rm /tmp/node-v${NODE_VERSION}-linux-x64.tar.xz
 
 # ==========================================
 # 5. 以文件形式覆盖 Maven 与 npm 代理配置
