@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI模型周榜TOP10</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-main: #080810;
+            --bg-canvas: #060810;
+            --surface2: rgba(13, 17, 23, 0.95);
+            --border: rgba(148, 163, 184, 0.12);
+            --muted: #64748b;
+            --neutral: #475569;
+            --cyan: #00e5ff;
+            --purple: #7c3aed;
+            --gold: #fbbf24;
+            --silver: #94a3b8;
+            --bronze: #cd7c3a;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Syne', sans-serif;
+            background-color: var(--bg-main);
+            color: #e2e8f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+            padding: 20px;
+        }
+        
+        .viewport {
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: var(--bg-main);
+        }
+        
+        .canvas {
+            width: 607px;
+            height: 1180px;
+            background-color: var(--bg-canvas);
+            position: relative;
+            overflow: hidden;
+            border-radius: 4px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+        
+        /* 网格背景纹理 */
+        .canvas::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                linear-gradient(rgba(0, 229, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 229, 255, 0.03) 1px, transparent 1px);
+            background-size: 20px 20px;
+            z-index: 0;
+        }
+        
+        /* 顶部紫色光晕 */
+        .canvas::after {
+            content: '';
+            position: absolute;
+            top: -100px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 400px;
+            height: 200px;
+            background: radial-gradient(ellipse at center, rgba(124, 58, 237, 0.25) 0%, transparent 70%);
+            z-index: 0;
+        }
+        
+        .content {
+            position: relative;
+            z-index: 1;
+            padding: 150px 20px 40px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* 标题区样式 */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 28px;
+        }
+        
+        .title-area {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        
+        h1 {
+            font-size: 35px;
+            font-weight: 800;
+            line-height: 1.1;
+            font-family: 'Syne', sans-serif;
+        }
+        
+        .gradient-text {
+            background: linear-gradient(90deg, #00e5ff, #7c3aed);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .subtitle {
+            font-size: 11px;
+            color: var(--muted);
+            font-family: 'Syne', sans-serif;
+        }
+        
+        .right-group {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 4px;
+        }
+        
+        .badge {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            color: #00e5ff;
+            background: rgba(0, 229, 255, 0.08);
+            border: 1px solid rgba(0, 229, 255, 0.22);
+            border-radius: 4px;
+            padding: 4px 10px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            letter-spacing: 0.02em;
+        }
+        
+        .badge::before {
+            content: '';
+            display: block;
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background-color: #00e5ff;
+            animation: pulse 2s ease-in-out infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+        
+        .account-name {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            letter-spacing: 0.08em;
+            background: linear-gradient(90deg, #00e5ff, #7c3aed);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        /* 统计卡样式 */
+        .stats-cards {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 24px;
+        }
+        
+        .stat-card {
+            flex: 1;
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: 7px;
+            padding: 9px 12px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .stat-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #00e5ff, transparent);
+            opacity: 0.35;
+        }
+        
+        .stat-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            text-transform: uppercase;
+            color: var(--muted);
+            letter-spacing: 0.05em;
+            margin-bottom: 4px;
+        }
+        
+        .stat-value {
+            font-family: 'Syne', sans-serif;
+            font-size: 20px;
+            font-weight: 700;
+            color: white;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .stat-sub {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            margin-top: 2px;
+            min-height: 14px;
+        }
+        
+        /* 榜单样式 */
+        .leaderboard {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 10px;
+        }
+        
+        .table-header {
+            display: flex;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 8px;
+            margin-bottom: 5px;
+        }
+        
+        .th {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            color: var(--muted);
+            text-align: center;
+        }
+        
+        .col-rank {
+            width: 42px;
+        }
+        
+        .col-country {
+            width: 38px;
+        }
+        
+        .col-model {
+            flex: 1;
+            text-align: left;
+            padding-left: 8px;
+        }
+        
+        .col-tokens {
+            width: 100px;
+        }
+        
+        .col-trend {
+            width: 72px;
+        }
+        
+        .col-hf {
+            width: 76px;
+        }
+        
+        .table-row {
+            display: flex;
+            height: 56px;
+            background: #0d1117;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            margin-bottom: 5px;
+            position: relative;
+            overflow: hidden;
+            align-items: center;
+            animation: slideIn 0.3s ease-out forwards;
+            opacity: 0;
+            transform: translateX(-6px);
+        }
+        
+        @keyframes slideIn {
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        .heat-bar {
+            position: absolute;
+            left: 3px;
+            top: 0;
+            bottom: 0;
+            border-radius: 0 6px 6px 0;
+            z-index: 0;
+        }
+        
+        .color-bar {
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            border-radius: 8px 0 0 8px;
+            z-index: 1;
+        }
+        
+        .cell {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 4px;
+        }
+        
+        .rank-cell {
+            width: 42px;
+            justify-content: center;
+        }
+        
+        .rank-num {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 500;
+            color: #94a3b8;
+        }
+        
+        .rank-1 { font-size: 26px; }
+        .rank-2 { font-size: 24px; }
+        .rank-3 { font-size: 22px; }
+        .rank-4-10 { font-size: 16px; }
+        
+        .medal {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .country-cell {
+            width: 38px;
+            justify-content: center;
+        }
+        
+        .flag {
+            width: 24px;
+            height: 16px;
+            object-fit: cover;
+            border-radius: 2px;
+        }
+        
+        .model-cell {
+            flex: 1;
+            justify-content: flex-start;
+            padding-left: 8px;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        
+        .model-name {
+            font-family: 'Syne', sans-serif;
+            font-size: 16px;
+            font-weight: 600;
+            color: white;
+        }
+        
+        .model-org {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            color: var(--muted);
+            margin-top: 2px;
+        }
+        
+        .tokens-cell {
+            width: 100px;
+            flex-direction: column;
+            gap: 4px;
+        }
+        
+        .token-value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 16px;
+            color: white;
+        }
+        
+        .token-bar {
+            width: 60px;
+            height: 2px;
+            border-radius: 2px;
+            background: #334155;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .token-fill {
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            border-radius: 2px;
+        }
+        
+        .trend-cell {
+            width: 72px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+        }
+        
+        .trend-up {
+            color: #f5222d;
+        }
+        
+        .trend-down {
+            color: #52c41a;
+        }
+        
+        .trend-new {
+            background: linear-gradient(90deg, #00e5ff, #7c3aed);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            outline: 1px solid rgba(0, 229, 255, 0.45);
+            box-shadow: 0 0 6px rgba(0, 229, 255, 0.25), 0 0 12px rgba(124, 58, 237, 0.15);
+            padding: 2px 4px;
+            border-radius: 2px;
+        }
+        
+        .hf-cell {
+            width: 76px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+        }
+        
+        .hf-value {
+            color: white;
+        }
+        
+        .hf-badge {
+            font-size: 11px;
+            color: #a78bfa;
+            background: rgba(124, 58, 237, 0.12);
+            border: 1px solid rgba(124, 58, 237, 0.25);
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+        
+        /* Footer样式 */
+        .footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 10px;
+            padding-bottom: 6px;
+        }
+        
+        .footer-note {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            color: var(--muted);
+        }
+        
+        .source-tags {
+            display: flex;
+            gap: 12px;
+        }
+        
+        .source-tag {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            color: var(--muted);
+        }
+    </style>
+</head>
+<body>
+    <div class="viewport">
+        <div class="canvas">
+            <div class="content">
+                <!-- 标题区 -->
+                <div class="header">
+                    <div class="title-area">
+                        <h1>AI 模型周榜 <span class="gradient-text">TOP 10</span></h1>
+                        <div class="subtitle">基于 OpenRouter 真实 Token 消耗</div>
+                    </div>
+                    <div class="right-group">
+                        <div class="badge">2026 第 17 周</div>
+                        <div class="account-name">@刀哥手记</div>
+                    </div>
+                </div>
+                
+                <!-- 统计卡 -->
+                <div class="stats-cards">
+                    <div class="stat-card card-total">
+                        <div class="stat-label">总用量</div>
+                        <div class="stat-value">9.99 万亿</div>
+                        <div class="stat-sub"></div>
+                    </div>
+                    <div class="stat-card card-cn">
+                        <div class="stat-label">中国模型</div>
+                        <div class="stat-value"></div>
+                        <div class="stat-sub"></div>
+                    </div>
+                    <div class="stat-card card-coding">
+                        <div class="stat-label">编程类占比</div>
+                        <div class="stat-value">62.2%</div>
+                        <div class="stat-sub"></div>
+                    </div>
+                </div>
+                
+                <!-- 榜单 -->
+                <div class="leaderboard">
+                    <div class="table-header">
+                        <div class="th col-rank">#</div>
+                        <div class="th col-country">国家</div>
+                        <div class="th col-model">模型</div>
+                        <div class="th col-tokens">本周 Token</div>
+                        <div class="th col-trend">环比</div>
+                        <div class="th col-hf">HF 月下载</div>
+                    </div>
+                    
+                    <div id="table-body">
+                        <!-- 榜单行将由JS动态生成 -->
+                    </div>
+                </div>
+                
+                <!-- Footer -->
+                <div class="footer">
+                    <div class="footer-note">数据源：OpenRouter · Hugging Face Hub（HF）</div>
+                    <div class="source-tags">
+                        <div class="source-tag">openrouter.ai</div>
+                        <div class="source-tag">huggingface.co</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 配置数据
+        const CODING_PCT = 62.2;
+        const LAST_WEEK = {
+            totalTokens: '9.95T',
+            cnTokens: '4.47T',
+            codingPct: 61,
+        };
+        
+        // 原始榜单数据
+        const rawModels = [
+            { rank: 1, org: 'MoonshotAI', name: 'Kimi K2.6', tokens: '1.36T', trend: null, closed: false, hfRaw: '376K' },
+            { rank: 2, org: 'Anthropic', name: 'Claude Sonnet 4.6', tokens: '1.35T', trend: -2, closed: true, hfRaw: '' },
+            { rank: 3, org: 'DeepSeek', name: 'DeepSeek V3.2', tokens: '1.31T', trend: +2, closed: false, hfRaw: '11067K' },
+            { rank: 4, org: 'Anthropic', name: 'Claude Opus 4.7', tokens: '1.14T', trend: null, closed: true, hfRaw: '' },
+            { rank: 5, org: 'Google', name: 'Gemini 3 Flash Preview', tokens: '1.06T', trend: -6, closed: true, hfRaw: '' },
+            { rank: 6, org: 'MiniMax', name: 'MiniMax M2.7', tokens: '806B', trend: -18, closed: false, hfRaw: '484K' },
+            { rank: 7, org: 'X-AI', name: 'Grok 4.1 Fast', tokens: '721B', trend: +28, closed: true, hfRaw: '' },
+            { rank: 8, org: 'Anthropic', name: 'Claude Opus 4.6', tokens: '699B', trend: -45, closed: true, hfRaw: '' },
+            { rank: 9, org: 'MiniMax', name: 'MiniMax M2.5', tokens: '698B', trend: -35, closed: false, hfRaw: '925K' },
+            { rank: 10, org: 'StepFun', name: 'Step 3.5 Flash', tokens: '673B', trend: +122, closed: false, hfRaw: '223K' },
+        ];
+        
+        // 国家代码映射
+        const ORG_CC = {
+            stepfun: 'cn', minimax: 'cn', deepseek: 'cn', zhipu: 'cn',
+            moonshot: 'cn', xiaomi: 'cn', mimo: 'cn', baidu: 'cn',
+            alibaba: 'cn', qwen: 'cn', bytedance: 'cn', '01.ai': 'cn',
+            anthropic: 'us', openai: 'us', google: 'us', xai: 'us',
+            meta: 'us', microsoft: 'us', amazon: 'us',
+            mistral: 'fr', cohere: 'ca',
+        };
+        
+        // Token解析函数
+        function parseTokens(s) {
+            if (typeof s === 'number') return s;
+            s = s.trim().toUpperCase();
+            if (s.endsWith('T')) return parseFloat(s) * 1e12;
+            if (s.endsWith('B')) return parseFloat(s) * 1e9;
+            if (s.endsWith('M')) return parseFloat(s) * 1e6;
+            return parseFloat(s);
+        }
+        
+        // 获取国家代码
+        function getCountryCode(org) {
+            const orgLower = org.toLowerCase();
+            for (const key of Object.keys(ORG_CC)) {
+                if (orgLower.includes(key)) {
+                    return ORG_CC[key];
+                }
+            }
+            return 'us'; // 默认美国
+        }
+        
+        // 格式化Token显示
+        function formatTokens(tokens) {
+            if (tokens >= 1e12) {
+                return (tokens / 1e12).toFixed(2) + ' T';
+            } else if (tokens >= 1e9) {
+                return (tokens / 1e9).toFixed(0) + ' B';
+            } else if (tokens >= 1e6) {
+                return (tokens / 1e6).toFixed(0) + ' M';
+            }
+            return tokens.toString();
+        }
+        
+        // 格式化HF下载量
+        function formatHF(value) {
+            if (!value) return '';
+            const num = parseFloat(value.toUpperCase().replace('K', '000').replace('M', '000000'));
+            if (num >= 1e6) {
+                return (num / 1e6).toFixed(1) + 'M';
+            } else if (num >= 1000) {
+                return (num / 1000).toFixed(0) + 'K';
+            }
+            return num.toString();
+        }
+        
+        // 处理数据
+        function processData() {
+            const firstTokens = parseTokens(rawModels[0].tokens);
+            
+            const models = rawModels.map(m => {
+                const tokens = parseTokens(m.tokens);
+                const barPct = Math.round(tokens / firstTokens * 1000) / 10;
+                const cc = getCountryCode(m.org);
+                
+                return {
+                    ...m,
+                    tokens,
+                    barPct,
+                    cc,
+                    formattedTokens: formatTokens(tokens),
+                    hfFormatted: m.closed ? '' : formatHF(m.hfRaw),
+                };
+            });
+            
+            // 计算统计卡数据
+            const totalTokens = models.reduce((s, m) => s + m.tokens, 0);
+            const cnTokens = models.filter(m => m.cc === 'cn').reduce((s, m) => s + m.tokens, 0);
+            const cnCount = models.filter(m => m.cc === 'cn').length;
+            const cnPct = Math.round(cnTokens / totalTokens * 100);
+            const totalWanyi = (totalTokens / 1e12).toFixed(2);
+            const cnWanyi = (cnTokens / 1e12).toFixed(2);
+            
+            // 环比计算
+            const lastTotal = parseTokens(LAST_WEEK.totalTokens);
+            const lastCn = parseTokens(LAST_WEEK.cnTokens);
+            const totalChg = ((totalTokens - lastTotal) / lastTotal * 100).toFixed(1);
+            const cnChg = ((cnTokens - lastCn) / lastCn * 100).toFixed(1);
+            const codingChg = ((CODING_PCT - LAST_WEEK.codingPct) / LAST_WEEK.codingPct * 100).toFixed(1);
+            
+            // 更新统计卡
+            document.querySelector('.card-total .stat-value').textContent = totalWanyi + ' 万亿';
+            document.querySelector('.card-total .stat-sub').innerHTML = fmtChg(totalChg);
+            
+            document.querySelector('.card-cn .stat-value').innerHTML =
+                `${cnPct}%<span style="font-size:11px;font-weight:400;opacity:0.7;white-space:nowrap;"> （${cnCount}席 · ${cnWanyi} 万亿）</span>`;
+            document.querySelector('.card-cn .stat-sub').innerHTML = fmtChg(cnChg);
+            
+            document.querySelector('.card-coding .stat-value').textContent = CODING_PCT + '%';
+            document.querySelector('.card-coding .stat-sub').innerHTML = fmtChg(codingChg);
+            
+            return models;
+        }
+        
+        // 格式化环比显示
+        function fmtChg(v) {
+            const n = parseFloat(v);
+            if (isNaN(n)) return '';
+            const color = n >= 0 ? '#f5222d' : '#52c41a';
+            const sign = n >= 0 ? '↑ +' : '↓ ';
+            return `<span style="color:${color}">环比 ${sign}${v}%</span>`;
+        }
+        
+        // 生成榜单行
+        function generateTableRows(models) {
+            const tableBody = document.getElementById('table-body');
+            tableBody.innerHTML = '';
+            
+            models.forEach((model, index) => {
+                const row = document.createElement('div');
+                row.className = 'table-row';
+                row.style.animationDelay = `${index * 0.04}s`;
+                
+                // 设置行样式
+                let borderColor = 'rgba(148,163,184,0.12)';
+                let colorBarColor = '#334155';
+                let heatBarGradient = 'linear-gradient(90deg, rgba(251,146,60,0.16), rgba(0,229,255,0.05))';
+                let tokenBarBg = '#334155';
+                let tokenBarFill = 'linear-gradient(90deg, rgba(0,229,255,0.6), #00e5ff)';
+                
+                if (model.rank === 1) {
+                    borderColor = 'rgba(251,191,36,0.28)';
+                    colorBarColor = '#fbbf24';
+                    heatBarGradient = 'linear-gradient(90deg, rgba(251,191,36,0.58) 0%, rgba(251,191,36,0.15) 60%, rgba(253,230,138,0.04) 100%)';
+                    tokenBarBg = '#78501a';
+                    tokenBarFill = 'linear-gradient(90deg, #fbbf24, #fde68a)';
+                } else if (model.rank === 2) {
+                    borderColor = 'rgba(148,163,184,0.20)';
+                    colorBarColor = '#94a3b8';
+                    heatBarGradient = 'linear-gradient(90deg, rgba(148,163,184,0.45), rgba(148,163,184,0.08))';
+                    tokenBarBg = '#3a4a5c';
+                    tokenBarFill = 'linear-gradient(90deg, #94a3b8, #e2e8f0)';
+                } else if (model.rank === 3) {
+                    borderColor = 'rgba(205,124,58,0.18)';
+                    colorBarColor = '#cd7c3a';
+                    heatBarGradient = 'linear-gradient(90deg, rgba(205,124,58,0.42), rgba(205,124,58,0.08))';
+                    tokenBarBg = '#5a3a1a';
+                    tokenBarFill = 'linear-gradient(90deg, #cd7c3a, #f0c080)';
+                }
+                
+                row.style.borderColor = borderColor;
+                
+                // 热力条
+                const heatBar = document.createElement('div');
+                heatBar.className = 'heat-bar';
+                heatBar.style.width = `${model.barPct}%`;
+                heatBar.style.background = heatBarGradient;
+                row.appendChild(heatBar);
+                
+                // 左侧色条
+                const colorBar = document.createElement('div');
+                colorBar.className = 'color-bar';
+                colorBar.style.backgroundColor = colorBarColor;
+                row.appendChild(colorBar);
+                
+                // 排名单元格
+                const rankCell = document.createElement('div');
+                rankCell.className = 'cell rank-cell';
+                
+                if (model.rank <= 3) {
+                    const medal = document.createElement('div');
+                    medal.className = 'medal';
+                    const medalIcons = ['🥇', '🥈', '🥉'];
+                    medal.innerHTML = `<span class="rank-${model.rank}">${medalIcons[model.rank-1]}</span>`;
+                    rankCell.appendChild(medal);
+                } else {
+                    const rankNum = document.createElement('div');
+                    rankNum.className = 'rank-num rank-4-10';
+                    rankNum.textContent = model.rank;
+                    rankCell.appendChild(rankNum);
+                }
+                row.appendChild(rankCell);
+                
+                // 国家单元格
+                const countryCell = document.createElement('div');
+                countryCell.className = 'cell country-cell';
+                const flagImg = document.createElement('img');
+                flagImg.className = 'flag';
+                flagImg.src = `https://flagcdn.com/w40/${model.cc}.png`;
+                flagImg.alt = model.cc;
+                countryCell.appendChild(flagImg);
+                row.appendChild(countryCell);
+                
+                // 模型单元格
+                const modelCell = document.createElement('div');
+                modelCell.className = 'cell model-cell';
+                const modelName = document.createElement('div');
+                modelName.className = 'model-name';
+                modelName.textContent = model.name;
+                const modelOrg = document.createElement('div');
+                modelOrg.className = 'model-org';
+                modelOrg.textContent = model.org;
+                modelCell.appendChild(modelName);
+                modelCell.appendChild(modelOrg);
+                row.appendChild(modelCell);
+                
+                // Token单元格
+                const tokensCell = document.createElement('div');
+                tokensCell.className = 'cell tokens-cell';
+                const tokenValue = document.createElement('div');
+                tokenValue.className = 'token-value';
+                tokenValue.textContent = model.formattedTokens;
+                tokensCell.appendChild(tokenValue);
+                
+                const tokenBar = document.createElement('div');
+                tokenBar.className = 'token-bar';
+                tokenBar.style.backgroundColor = tokenBarBg;
+                const tokenFill = document.createElement('div');
+                tokenFill.className = 'token-fill';
+                tokenFill.style.width = `${model.barPct}%`;
+                tokenFill.style.background = tokenBarFill;
+                tokenBar.appendChild(tokenFill);
+                tokensCell.appendChild(tokenBar);
+                row.appendChild(tokensCell);
+                
+                // 环比单元格
+                const trendCell = document.createElement('div');
+                trendCell.className = 'cell trend-cell';
+                
+                if (model.trend === null) {
+                    const newBadge = document.createElement('div');
+                    newBadge.className = 'trend-new';
+                    newBadge.textContent = 'NEW';
+                    trendCell.appendChild(newBadge);
+                } else if (model.trend === 0) {
+                    trendCell.textContent = '—';
+                    trendCell.style.color = 'var(--neutral)';
+                } else if (model.trend > 0) {
+                    trendCell.innerHTML = `<span class="trend-up">▲ +${model.trend}%</span>`;
+                } else {
+                    trendCell.innerHTML = `<span class="trend-down">▼ ${model.trend}%</span>`;
+                }
+                row.appendChild(trendCell);
+                
+                // HF单元格
+                const hfCell = document.createElement('div');
+                hfCell.className = 'cell hf-cell';
+                
+                if (model.closed) {
+                    const hfBadge = document.createElement('div');
+                    hfBadge.className = 'hf-badge';
+                    hfBadge.textContent = '闭源';
+                    hfCell.appendChild(hfBadge);
+                } else {
+                    const hfValue = document.createElement('div');
+                    hfValue.className = 'hf-value';
+                    hfValue.textContent = model.hfFormatted;
+                    hfCell.appendChild(hfValue);
+                }
+                row.appendChild(hfCell);
+                
+                tableBody.appendChild(row);
+            });
+        }
+        
+        // 初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            const models = processData();
+            generateTableRows(models);
+        });
+    </script>
+</body>
+</html>
