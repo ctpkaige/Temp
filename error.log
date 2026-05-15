@@ -1,0 +1,39 @@
+future: <Task finished name='Task-103' coro=<Logging.async_success_handler() done, defined at /app/.venv/lib/python3.13/site-packages/litellm/litellm_core_utils/litellm_logging.py:2481> exception=Exception('[Non-Blocking] LiteLLM.Success_Call Error: 1 validation error for AnthropicResponse\n  Input should be a valid dictionary or instance of AnthropicResponse [type=model_type, input_value=None, input_type=NoneType]\n    For further information visit https://errors.pydantic.dev/2.12/v/model_type')>
+Traceback (most recent call last):
+  File "/app/.venv/lib/python3.13/site-packages/litellm/litellm_core_utils/litellm_logging.py", line 1851, in _success_handler_helper_fn
+    result = self._handle_anthropic_messages_response_logging(result=result)
+  File "/app/.venv/lib/python3.13/site-packages/litellm/litellm_core_utils/litellm_logging.py", line 3456, in _handle_anthropic_messages_response_logging
+    pydantic_result = AnthropicResponse.model_validate(result)
+  File "/app/.venv/lib/python3.13/site-packages/pydantic/main.py", line 716, in model_validate
+    return cls.__pydantic_validator__.validate_python(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+      
+        obj,
+      
+        ^^^^
+    ...<5 lines>...
+        by_name=by_name,
+        ^^^^^^^^^^^^^^^^
+    )
+    ^
+pydantic_core._pydantic_core.ValidationError: 1 validation error for AnthropicResponse
+  Input should be a valid dictionary or instance of AnthropicResponse [type=model_type, input_value=None, input_type=NoneType]
+    For further information visit https://errors.pydantic.dev/2.12/v/model_type
+During handling of the above exception, another exception occurred:
+Traceback (most recent call last):
+  File "/app/.venv/lib/python3.13/site-packages/litellm/litellm_core_utils/litellm_logging.py", line 2545, in async_success_handler
+    start_time, end_time, result = self._success_handler_helper_fn(
+                                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        start_time=start_time,
+        ^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+        standard_logging_object=kwargs.get("standard_logging_object", None),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/app/.venv/lib/python3.13/site-packages/litellm/litellm_core_utils/litellm_logging.py", line 1920, in _success_handler_helper_fn
+    raise Exception(f"[Non-Blocking] LiteLLM.Success_Call Error: {str(e)}")
+Exception: [Non-Blocking] LiteLLM.Success_Call Error: 1 validation error for AnthropicResponse
+  Input should be a valid dictionary or instance of AnthropicResponse [type=model_type, input_value=None, input_type=NoneType]
+    For further information visit https://errors.pydantic.dev/2.12/v/model_type
+01:19:45 - LiteLLM:DEBUG: utils.py:482 - Logging Details LiteLLM-Async Success Call, cache_hit=False
