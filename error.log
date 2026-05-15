@@ -1,0 +1,65 @@
+01:17:38 - LiteLLM:DEBUG: litellm_logging.py:1239 - RAW RESPONSE:
+first stream response received
+01:17:38 - LiteLLM:DEBUG: cost_calculator.py:1134 - selected model name for cost calculation: hosted_vllm/glm-4.7
+01:17:38 - LiteLLM:DEBUG: token_counter.py:399 - messages in token_counter: None, text in token_counter: 
+01:17:38 - LiteLLM:DEBUG: cost_calculator.py:588 - Returned custom cost for model=hosted_vllm/glm-4.7 - prompt_tokens_cost_usd_dollar: 0, completion_tokens_cost_usd_dollar: 0
+01:17:38 - LiteLLM:DEBUG: litellm_logging.py:1562 - response_cost: 0.0
+01:17:38 - LiteLLM:DEBUG: cost_calculator.py:1134 - selected model name for cost calculation: hosted_vllm/glm-4.7
+01:17:38 - LiteLLM:DEBUG: token_counter.py:399 - messages in token_counter: None, text in token_counter: 
+01:17:38 - LiteLLM:DEBUG: cost_calculator.py:588 - Returned custom cost for model=hosted_vllm/glm-4.7 - prompt_tokens_cost_usd_dollar: 0, completion_tokens_cost_usd_dollar: 0
+01:17:38 - LiteLLM:DEBUG: litellm_logging.py:1562 - response_cost: 0.0
+01:17:38 - LiteLLM Router:INFO: router.py:3928 - ageneric_api_call_with_fallbacks(model=hosted_vllm/glm-4.7) 200 OK
+01:17:38 - LiteLLM Router:DEBUG: router.py:5627 - Async Response: <async_generator object AnthropicStreamWrapper.async_anthropic_sse_wrapper at 0x7f0871a44340>
+01:17:38 - LiteLLM Proxy:DEBUG: common_request_processing.py:1762 - inside generator
+01:17:38 - LiteLLM Proxy:DEBUG: common_request_processing.py:1772 - async_data_generator: received streaming chunk - b'event: message_start\ndata: {"type": "message_start", "message": {"id": "msg_c9364aad-f1aa-482b-afb3-810029b2ae23", "type": "message", "role": "assistant", "content": [], "model": "glm-4.7", "stop_reason": null, "stop_sequence": null, "usage": {"input_tokens": 0, "output_tokens": 0, "cache_creation_input_tokens": 0, "cache_read_input_tokens": 0}}}\n\n'
+INFO:     109.52.80.17:63290 - "POST /v1/messages?beta=true HTTP/1.1" 200 OK
+01:17:38 - LiteLLM Proxy:DEBUG: common_request_processing.py:1772 - async_data_generator: received streaming chunk - b'event: content_block_start\ndata: {"type": "content_block_start", "index": 0, "content_block": {"type": "text", "text": ""}}\n\n'
+01:17:38 - LiteLLM:DEBUG: aiohttp_transport.py:96 - Transfer incomplete, but continuing: Response payload is not completed: <TransferEncodingError: 400, message='Not enough data to satisfy transfer length header.'>
+01:17:38 - LiteLLM Proxy:DEBUG: common_request_processing.py:1772 - async_data_generator: received streaming chunk - b'event: content_block_stop\ndata: {"type": "content_block_stop", "index": 0}\n\n'
+01:17:38 - LiteLLM Proxy:DEBUG: common_request_processing.py:1772 - async_data_generator: received streaming chunk - b'event: content_block_delta\ndata: {"type": "content_block_delta", "index": 0, "delta": {"type": "text_delta", "text": ""}}\n\n'
+01:17:38 - LiteLLM:DEBUG: litellm_logging.py:2013 - Logging Details LiteLLM-Success Call: Cache_hit=False
+01:17:38 - LiteLLM Proxy:DEBUG: common_request_processing.py:1772 - async_data_generator: received streaming chunk - b'event: message_delta\ndata: {"type": "message_delta", "delta": {"stop_reason": "end_turn"}, "usage": {"input_tokens": 0, "output_tokens": 0}}\n\n'
+01:17:38 - LiteLLM Proxy:DEBUG: common_request_processing.py:1772 - async_data_generator: received streaming chunk - b'event: message_stop\ndata: {"type": "message_stop"}\n\n'
+01:17:38 - LiteLLM:DEBUG: utils.py:482 - Logging Details LiteLLM-Async Success Call, cache_hit=False
+01:17:38 - LiteLLM:DEBUG: litellm_logging.py:2013 - Logging Details LiteLLM-Success Call: Cache_hit=False
+Task exception was never retrieved
+future: <Task finished name='Task-84' coro=<Logging.async_success_handler() done, defined at /app/.venv/lib/python3.13/site-packages/litellm/litellm_core_utils/litellm_logging.py:2481> exception=Exception('[Non-Blocking] LiteLLM.Success_Call Error: 1 validation error for AnthropicResponse\n  Input should be a valid dictionary or instance of AnthropicResponse [type=model_type, input_value=None, input_type=NoneType]\n    For further information visit https://errors.pydantic.dev/2.12/v/model_type')>
+Traceback (most recent call last):
+  File "/app/.venv/lib/python3.13/site-packages/litellm/litellm_core_utils/litellm_logging.py", line 1851, in _success_handler_helper_fn
+    result = self._handle_anthropic_messages_response_logging(result=result)
+  File "/app/.venv/lib/python3.13/site-packages/litellm/litellm_core_utils/litellm_logging.py", line 3456, in _handle_anthropic_messages_response_logging
+    pydantic_result = AnthropicResponse.model_validate(result)
+  File "/app/.venv/lib/python3.13/site-packages/pydantic/main.py", line 716, in model_validate
+    return cls.__pydantic_validator__.validate_python(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+      
+        obj,
+      
+        ^^^^
+    ...<5 lines>...
+        by_name=by_name,
+        ^^^^^^^^^^^^^^^^
+    )
+    ^
+pydantic_core._pydantic_core.ValidationError: 1 validation error for AnthropicResponse
+  Input should be a valid dictionary or instance of AnthropicResponse [type=model_type, input_value=None, input_type=NoneType]
+    For further information visit https://errors.pydantic.dev/2.12/v/model_type
+During handling of the above exception, another exception occurred:
+Traceback (most recent call last):
+  File "/app/.venv/lib/python3.13/site-packages/litellm/litellm_core_utils/litellm_logging.py", line 2545, in async_success_handler
+    start_time, end_time, result = self._success_handler_helper_fn(
+                                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        start_time=start_time,
+        ^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+        standard_logging_object=kwargs.get("standard_logging_object", None),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/app/.venv/lib/python3.13/site-packages/litellm/litellm_core_utils/litellm_logging.py", line 1920, in _success_handler_helper_fn
+    raise Exception(f"[Non-Blocking] LiteLLM.Success_Call Error: {str(e)}")
+Exception: [Non-Blocking] LiteLLM.Success_Call Error: 1 validation error for AnthropicResponse
+  Input should be a valid dictionary or instance of AnthropicResponse [type=model_type, input_value=None, input_type=NoneType]
+    For further information visit https://errors.pydantic.dev/2.12/v/model_type
+01:17:38 - LiteLLM:DEBUG: utils.py:482 - Logging Details LiteLLM-Async Success Call, cache_hit=False
+
