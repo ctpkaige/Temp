@@ -1,0 +1,101 @@
+Task exception was never retrieved
+future: <Task finished name='Task-85' coro=<Logging.async_success_handler() done, defined at /app/.venv/lib/python3.13/site-packages/litellm/litellm_core_utils/litellm_logging.py:2481> exception=Exception('[Non-Blocking] LiteLLM.Success_Call Error: 1 validation error for AnthropicResponse\n  Input should be a valid dictionary or instance of AnthropicResponse [type=model_type, input_value=None, input_type=NoneType]\n    For further information visit https://errors.pydantic.dev/2.12/v/model_type')>
+Traceback (most recent call last):
+  File "/app/.venv/lib/python3.13/site-packages/litellm/litellm_core_utils/litellm_logging.py", line 1851, in _success_handler_helper_fn
+    result = self._handle_anthropic_messages_response_logging(result=result)
+  File "/app/.venv/lib/python3.13/site-packages/litellm/litellm_core_utils/litellm_logging.py", line 3456, in _handle_anthropic_messages_response_logging
+    pydantic_result = AnthropicResponse.model_validate(result)
+  File "/app/.venv/lib/python3.13/site-packages/pydantic/main.py", line 716, in model_validate
+    return cls.__pydantic_validator__.validate_python(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+      
+        obj,
+      
+        ^^^^
+    ...<5 lines>...
+        by_name=by_name,
+        ^^^^^^^^^^^^^^^^
+    )
+    ^
+pydantic_core._pydantic_core.ValidationError: 1 validation error for AnthropicResponse
+  Input should be a valid dictionary or instance of AnthropicResponse [type=model_type, input_value=None, input_type=NoneType]
+    For further information visit https://errors.pydantic.dev/2.12/v/model_type
+During handling of the above exception, another exception occurred:
+Traceback (most recent call last):
+  File "/app/.venv/lib/python3.13/site-packages/litellm/litellm_core_utils/litellm_logging.py", line 2545, in async_success_handler
+    start_time, end_time, result = self._success_handler_helper_fn(
+                                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        start_time=start_time,
+        ^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+        standard_logging_object=kwargs.get("standard_logging_object", None),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/app/.venv/lib/python3.13/site-packages/litellm/litellm_core_utils/litellm_logging.py", line 1920, in _success_handler_helper_fn
+    raise Exception(f"[Non-Blocking] LiteLLM.Success_Call Error: {str(e)}")
+Exception: [Non-Blocking] LiteLLM.Success_Call Error: 1 validation error for AnthropicResponse
+  Input should be a valid dictionary or instance of AnthropicResponse [type=model_type, input_value=None, input_type=NoneType]
+    For further information visit https://errors.pydantic.dev/2.12/v/model_type
+01:17:54 - LiteLLM Proxy:DEBUG: hanging_request_check.py:148 - Checking for hanging requests....
+01:19:43 - LiteLLM Proxy:DEBUG: http_parsing_utils.py:529 - populate_request_with_path_params: No vector_store_id present in path=/v1/messages
+01:19:43 - LiteLLM Proxy:DEBUG: common_request_processing.py:876 - Request received by LiteLLM:
+{
+    "model": "glm-4.7",
+    "messages": [
+      
+{
+            "role": "user",
+            "content": [
+                {
+                    "type": "text",
+                    "text": "\u5206\u6790\u5f53\u524d\u9879\u76ee\uff0c\u5bf9\u9879\u76ee\u505a\u4e00\u4e2a\u63cf\u8ff0"
+                }
+            ]
+      
+}
+    ],
+    "system": [
+      
+{
+            "type": "text",
+            "text": "x-anthropic-billing-header: cc_version=2.1.141.f42; cc_entrypoint=cli; cch=877d9;"
+        },
+      
+{
+            "type": "text",
+            "text": "You are Claude Code, Anthropic's official CLI for Claude."
+        },
+      
+{
+            "type": "text",
+            "text": "Generate a concise, sentence-case title (3-7 words) that captures the main topic or goal of this coding session. The title should be clear enough that the user recognizes the session in a list. Use sentence case: capitalize only the first word and proper nouns.\n\nReturn JSON with a single \"title\" field.\n\nGood examples:\n{\"title\": \"Fix login button on mobile\"}\n{\"title\": \"Add OAuth authentication\"}\n{\"title\": \"Debug failing CI tests\"}\n{\"title\": \"Refactor API client error handling\"}\n\nBad (too vague): {\"title\": \"Code changes\"}\nBad (too long): {\"title\": \"Investigate and fix the issue where the login button does not respond on mobile devices\"}\nBad (wrong case): {\"title\": \"Fix Login Button On Mobile\"}"
+      
+}
+    ],
+    "tools": [],
+    "metadata": {
+        "user_id": "{\"device_id\":\"8a298c1b04f1cc7622e4ca52d4f925e078619db0cb3a4c49b6f09c49da9e545f\",\"account_uuid\":\"\",\"session_id\":\"a787765b-b642-43d3-a09f-15c537c31e3c\"}"
+    },
+    "max_tokens": 32000,
+    "output_config": {
+        "effort": "high",
+        "format": {
+            "type": "json_schema",
+            "schema": {
+                "type": "object",
+                "properties": {
+                    "title": {
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "title"
+                ],
+                "additionalProperties": false
+            }
+      
+}
+    },
+    "stream": true
+}
