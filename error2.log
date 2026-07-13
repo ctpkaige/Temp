@@ -1,1 +1,13 @@
-Unable to create application: application spec for devops-demo-backend is invalid: InvalidSpecError: repository not accessible: repositories not accessible: &Repository{Repo: "http://gitlab.xagdc.com/engineering-group/devops-demo-backend.git", Type: "", Name: "", Project: ""}: repo client error while testing repository: rpc error: code = Unknown desc = error testing repository connectivity: unable to ls-remote HEAD on repository: failed to list refs: authentication required: HTTP Basic: Access denied. If a password was provided for Git authentication, the password was incorrect or you're required to use a token instead of a password. If a token was provided, it was either incorrect, expired, or improperly scoped. See http://gitlab.xagdc.com/help/topics/git/troubleshooting_git.md#error-on-git-fetch-http-basic-access-denied
+Types: deb
+# http://snapshot.debian.org/archive/debian/20260316T000000Z
+URIs: http://deb.debian.org/debian
+Suites: bookworm bookworm-updates
+Components: main
+Signed-By: /usr/share/keyrings/debian-archive-keyring.gpg
+
+Types: deb
+# http://snapshot.debian.org/archive/debian-security/20260316T000000Z
+URIs: http://deb.debian.org/debian-security
+Suites: bookworm-security
+Components: main
+Signed-By: /usr/share/keyrings/debian-archive-keyring.gpg
