@@ -1,72 +1,32 @@
-$ kubectl get secret envoy-gateway -n envoy-gateway-system -o jsonpath='{.data.tls\.crt}' | base64 -d | openssl x509 -text | grep -A 2 "Subject Alternative Name"
-            X509v3 Subject Alternative Name:
-                DNS:envoy-gateway, DNS:envoy-gateway.envoy-gateway-system, DNS:envoy-gateway.envoy-gateway-system.svc, DNS:envoy-gateway.envoy-gateway-system.svc.cluster.local
-    Signature Algorithm: sha256WithRSAEncryption
-
-$ kubectl get deploy envoy-envoy-gateway-system-eg-gateway-b87277ac -n envoy-gateway-system -o yaml | grep -i -A 2 -B 2 "xds"
-              grpc_services:
-              - envoy_grpc:
-                  cluster_name: xds_cluster
-              set_node_on_first_message_only: true
-            lds_config:
---
-            - connect_timeout: 10s
-              load_assignment:
-                cluster_name: xds_cluster
-                endpoints:
-                - load_balancing_weight: 1
---
-                        interval: 30s
-                        timeout: 5s
-              name: xds_cluster
-              type: STRICT_DNS
-              transport_socket:
---
-                      tls_maximum_protocol_version: TLSv1_3
-                    tls_certificate_sds_secret_configs:
-                    - name: xds_certificate
-                      sds_config:
-                        path_config_source:
-                          path: /sds/xds-certificate.json
-                        resource_api_version: V3
-                    validation_context_sds_secret_config:
-                      name: xds_trusted_ca
-                      sds_config:
-                        path_config_source:
-                          path: /sds/xds-trusted-ca.json
-                        resource_api_version: V3
-          overload_manager:
---
-          defaultMode: 420
-          items:
-          - key: xds-trusted-ca.json
-            path: xds-trusted-ca.json
-          - key: xds-certificate.json
-            path: xds-certificate.json
-          name: envoy-envoy-gateway-system-eg-gateway-b87277ac
-          optional: false
-
-$ kubectl logs envoy-envoy-gateway-system-eg-gateway-b87277ac-7ff485958-sf26k -n envoy-gateway-system -c envoy | head -n 50
-[2026-09-10 07:05:31.833][1][debug][misc] [source/server/cgroup_cpu_util.cc:468] Found cgroup v2 at /sys/fs/cgroup, continuing search for v1
-[2026-09-10 07:05:31.833][1][debug][misc] [source/server/cgroup_cpu_util.cc:495] Using cgroup v2 mount at /sys/fs/cgroup
-[2026-09-10 07:05:31.833][1][debug][misc] [source/server/cgroup_cpu_util.cc:190] Constructed cgroup path: /sys/fs/cgroup/ (version: v2)
-[2026-09-10 07:05:31.833][1][debug][misc] [source/server/cgroup_cpu_util.cc:232] Using cgroup v2 file at /sys/fs/cgroup/
-[2026-09-10 07:05:31.833][1][debug][misc] [source/server/cgroup_cpu_util.cc:314] cgroup v2 unlimited CPU (quota = max)
-[2026-09-10 07:05:46.882][1][warning][config] [source/extensions/config_subscription/grpc/grpc_subscription_impl.cc:130] gRPC config: initial fetch timed out for type.googleapis.com/envoy.config.endpoint.v3.ClusterLoadAssignment
-[2026-09-10 07:06:09.448][1][warning][config] [./source/extensions/config_subscription/grpc/grpc_stream.h:227] DeltaAggregatedResources gRPC config stream to xds_cluster closed since 37s ago: 14, no healthy upstream{no_healthy_upstream}
-[2026-09-10 07:06:18.954][1][warning][config] [./source/extensions/config_subscription/grpc/grpc_stream.h:227] DeltaAggregatedResources gRPC config stream to xds_cluster closed since 47s ago: 14, no healthy upstream{no_healthy_upstream}
-[2026-09-10 07:06:20.361][1][warning][config] [./source/extensions/config_subscription/grpc/grpc_stream.h:227] DeltaAggregatedResources gRPC config stream to xds_cluster closed since 48s ago: 14, no healthy upstream{no_healthy_upstream}
-[2026-09-10 07:06:30.052][1][warning][config] [./source/extensions/config_subscription/grpc/grpc_stream.h:227] DeltaAggregatedResources gRPC config stream to xds_cluster closed since 58s ago: 14, no healthy upstream{no_healthy_upstream}
-[2026-09-10 07:06:32.961][1][warning][config] [./source/extensions/config_subscription/grpc/grpc_stream.h:227] DeltaAggregatedResources gRPC config stream to xds_cluster closed since 61s ago: 14, no healthy upstream{no_healthy_upstream}
-[2026-09-10 07:06:42.089][1][warning][config] [./source/extensions/config_subscription/grpc/grpc_stream.h:227] DeltaAggregatedResources gRPC config stream to xds_cluster closed since 70s ago: 14, no healthy upstream{no_healthy_upstream}
-[2026-09-10 07:07:11.248][1][warning][config] [./source/extensions/config_subscription/grpc/grpc_stream.h:227] DeltaAggregatedResources gRPC config stream to xds_cluster closed since 99s ago: 14, no healthy upstream{no_healthy_upstream}
-[2026-09-10 07:07:37.814][1][warning][config] [./source/extensions/config_subscription/grpc/grpc_stream.h:227] DeltaAggregatedResources gRPC config stream to xds_cluster closed since 125s ago: 14, no healthy upstream{no_healthy_upstream}
-[2026-09-10 07:07:46.720][1][warning][config] [./source/extensions/config_subscription/grpc/grpc_stream.h:227] DeltaAggregatedResources gRPC config stream to xds_cluster closed since 134s ago: 14, no healthy upstream{no_healthy_upstream}
-[2026-09-10 07:08:11.600][1][warning][config] [./source/extensions/config_subscription/grpc/grpc_stream.h:227] DeltaAggregatedResources gRPC config stream to xds_cluster closed since 159s ago: 14, no healthy upstream{no_healthy_upstream}
-[2026-09-10 07:08:38.333][1][warning][config] [./source/extensions/config_subscription/grpc/grpc_stream.h:227] DeltaAggregatedResources gRPC config stream to xds_cluster closed since 186s ago: 14, no healthy upstream{no_healthy_upstream}
-
-$ kubectl get secret envoy-gateway -n envoy-gateway-system -o jsonpath='{.data.tls\.crt}' | base64 -d | openssl x509 -noout -dates -issuer -subject
-notBefore=Sep  9 06:29:31 2026 GMT
-notAfter=Sep  9 06:29:31 2031 GMT
-issuer=CN = envoy-gateway, serialNumber = 601771478
-subject=CN = envoy-gateway
+[INFO] 172.21.58.161:47737 - 21758 "AAAA IN kubernetes.default.svc.cluster.local.deer-flow.svc.cluster.local. udp 82 false 512" - - 0 0.00004893s
+[INFO] 172.21.58.161:47737 - 57849 "A IN kubernetes.default.svc.cluster.local.deer-flow.svc.cluster.local. udp 82 false 512" - - 0 0.000067371s
+[INFO] 172.21.58.161:47737 - 21758 "AAAA IN kubernetes.default.svc.cluster.local.deer-flow.svc.cluster.local. udp 82 false 512" - - 0 0.000022458s
+[INFO] 172.21.58.161:59537 - 15740 "AAAA IN kubernetes.default.svc.cluster.local.svc.cluster.local. udp 72 false 512" - - 0 0.000073577s
+[INFO] 172.21.58.161:59537 - 4986 "A IN kubernetes.default.svc.cluster.local.svc.cluster.local. udp 72 false 512" - - 0 0.000042884s
+[INFO] 172.21.58.161:47737 - 57849 "A IN kubernetes.default.svc.cluster.local.deer-flow.svc.cluster.local. udp 82 false 512" - - 0 0.000016464s
+[INFO] 172.21.58.161:34937 - 17770 "AAAA IN kubernetes.default.svc.cluster.local.cluster.local. udp 68 false 512" - - 0 0.000027186s
+[INFO] 172.21.58.161:59537 - 15740 "AAAA IN kubernetes.default.svc.cluster.local.svc.cluster.local. udp 72 false 512" - - 0 0.000014527s
+[INFO] 172.21.58.161:59537 - 4986 "A IN kubernetes.default.svc.cluster.local.svc.cluster.local. udp 72 false 512" - - 0 0.00002998s
+[INFO] 172.21.58.161:34937 - 29801 "A IN kubernetes.default.svc.cluster.local.cluster.local. udp 68 false 512" - - 0 0.000118662s
+[INFO] 172.21.58.161:41634 - 54178 "AAAA IN kubernetes.default.svc.cluster.local. udp 54 false 512" - - 0 0.000014838s
+[INFO] 172.21.58.161:34937 - 29801 "A IN kubernetes.default.svc.cluster.local.cluster.local. udp 68 false 512" - - 0 0.000013348s
+[INFO] 172.21.58.161:34937 - 17770 "AAAA IN kubernetes.default.svc.cluster.local.cluster.local. udp 68 false 512" - - 0 0.000025358s
+[INFO] 172.21.58.161:41634 - 4514 "A IN kubernetes.default.svc.cluster.local. udp 54 false 512" - - 0 0.000026415s
+[INFO] 172.21.58.161:41634 - 4514 "A IN kubernetes.default.svc.cluster.local. udp 54 false 512" - - 0 0.00001559s
+[INFO] 172.21.58.161:41634 - 54178 "AAAA IN kubernetes.default.svc.cluster.local. udp 54 false 512" - - 0 0.000027698s
+[INFO] 172.21.188.41:50831 - 20868 "AAAA IN envoy-gateway.envoy-gateway-system.svc.cluster.local. udp 81 false 1232" - - 0 0.000023535s
+[INFO] 172.21.188.41:58200 - 20868 "AAAA IN envoy-gateway.envoy-gateway-system.svc.cluster.local. udp 81 false 1232" - - 0 0.000020471s
+[INFO] 172.21.188.41:33613 - 20868 "AAAA IN envoy-gateway.envoy-gateway-system.svc.cluster.local. udp 81 false 1232" - - 0 0.000025057s
+[INFO] 172.21.188.41:44658 - 43784 "A IN envoy-gateway.envoy-gateway-system.svc.cluster.local. udp 81 false 1232" - - 0 0.000022846s
+[INFO] 172.21.188.41:41438 - 20868 "AAAA IN envoy-gateway.envoy-gateway-system.svc.cluster.local. udp 81 false 1232" - - 0 0.000014568s
+[INFO] 172.21.188.41:34654 - 43784 "A IN envoy-gateway.envoy-gateway-system.svc.cluster.local. udp 81 false 1232" - - 0 0.000014657s
+[INFO] 172.21.188.41:45888 - 43784 "A IN envoy-gateway.envoy-gateway-system.svc.cluster.local. udp 81 false 1232" - - 0 0.000023812s
+[INFO] 172.21.188.41:40850 - 43784 "A IN envoy-gateway.envoy-gateway-system.svc.cluster.local. udp 81 false 1232" - - 0 0.000016408s
+[INFO] 172.22.219.21:35954 - 10346 "AAAA IN envoy-gateway.envoy-gateway-system.svc.cluster.local. udp 81 false 1232" - - 0 0.000047485s
+[INFO] 172.22.219.21:54237 - 10346 "AAAA IN envoy-gateway.envoy-gateway-system.svc.cluster.local. udp 81 false 1232" - - 0 0.000129387s
+[INFO] 172.22.219.21:43822 - 10346 "AAAA IN envoy-gateway.envoy-gateway-system.svc.cluster.local. udp 81 false 1232" - - 0 0.000068456s
+[INFO] 172.22.219.21:56693 - 10346 "AAAA IN envoy-gateway.envoy-gateway-system.svc.cluster.local. udp 81 false 1232" - - 0 0.000041236s
+[INFO] 172.22.219.21:57106 - 7720 "A IN envoy-gateway.envoy-gateway-system.svc.cluster.local. udp 81 false 1232" - - 0 0.000027175s
+[INFO] 172.22.219.21:48245 - 7720 "A IN envoy-gateway.envoy-gateway-system.svc.cluster.local. udp 81 false 1232" - - 0 0.000032244s
+[INFO] 172.22.219.21:44765 - 7720 "A IN envoy-gateway.envoy-gateway-system.svc.cluster.local. udp 81 false 1232" - - 0 0.00003432s
+[INFO] 172.22.219.21:52147 - 7720 "A IN envoy-gateway.envoy-gateway-system.svc.cluster.local. udp 81 false 1232" - - 0 0.000032897s
