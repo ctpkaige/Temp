@@ -1,9 +1,23 @@
-Events:
-  Type     Reason             Age                    From     Message
-  ----     ------             ----                   ----     -------
-  Warning  FailedPreStopHook  14m (x6 over 69m)      kubelet  spec.containers{envoy}: PreStopHook failed
-  Normal   Pulled             7m39s (x8 over 84m)    kubelet  spec.containers{envoy}: Container image "docker.io/envoyproxy/envoy:distroless-v1.38.3" already present on machine and can be accessed by the pod
-  Normal   Created            7m39s (x8 over 84m)    kubelet  spec.containers{envoy}: Container created
-  Normal   Started            7m39s (x8 over 84m)    kubelet  spec.containers{envoy}: Container started
-  Warning  Unhealthy          4m29s (x229 over 84m)  kubelet  spec.containers{envoy}: Startup probe failed: Get "http://172.22.219.55:19003/ready": dial tcp 172.22.219.55:19003: connect: connection refused
-  Normal   Killing            2m39s (x8 over 79m)    kubelet  spec.containers{envoy}: Container envoy failed startup probe, will be restarted
+Status:
+  Addresses:
+    Type:   IPAddress
+    Value:  109.52.64.105
+    Type:   IPAddress
+    Value:  109.52.64.101
+    Type:   IPAddress
+    Value:  109.52.64.103
+    Type:   IPAddress
+    Value:  109.52.64.104
+  Conditions:
+    Last Transition Time:  2026-09-09T19:36:48Z
+    Message:               The Gateway has been scheduled by Envoy Gateway
+    Observed Generation:   5
+    Reason:                Accepted
+    Status:                True
+    Type:                  Accepted
+    Last Transition Time:  2026-09-09T19:36:48Z
+    Message:               Envoy replicas unavailable
+    Observed Generation:   5
+    Reason:                NoResources
+    Status:                False
+    Type:                  Programmed
