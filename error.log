@@ -1,23 +1,5 @@
-Status:
-  Addresses:
-    Type:   IPAddress
-    Value:  109.52.64.105
-    Type:   IPAddress
-    Value:  109.52.64.101
-    Type:   IPAddress
-    Value:  109.52.64.103
-    Type:   IPAddress
-    Value:  109.52.64.104
-  Conditions:
-    Last Transition Time:  2026-09-09T19:36:48Z
-    Message:               The Gateway has been scheduled by Envoy Gateway
-    Observed Generation:   5
-    Reason:                Accepted
-    Status:                True
-    Type:                  Accepted
-    Last Transition Time:  2026-09-09T19:36:48Z
-    Message:               Envoy replicas unavailable
-    Observed Generation:   5
-    Reason:                NoResources
-    Status:                False
-    Type:                  Programmed
+~$ kubectl get endpoints -n envoy-gateway-system
+Warning: v1 Endpoints is deprecated in v1.33+; use discovery.k8s.io/v1 EndpointSlice
+NAME                                             ENDPOINTS                                                             AGE
+envoy-envoy-gateway-system-eg-gateway-b87277ac                                                                         63d
+envoy-gateway                                    172.21.188.3:18002,172.21.188.3:9443,172.21.188.3:18000 + 2 more...   63d
