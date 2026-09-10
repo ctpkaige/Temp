@@ -1,5 +1,4 @@
-~$ kubectl get endpoints -n envoy-gateway-system
-Warning: v1 Endpoints is deprecated in v1.33+; use discovery.k8s.io/v1 EndpointSlice
-NAME                                             ENDPOINTS                                                             AGE
-envoy-envoy-gateway-system-eg-gateway-b87277ac                                                                         63d
-envoy-gateway                                    172.21.188.3:18002,172.21.188.3:9443,172.21.188.3:18000 + 2 more...   63d
+1.7890179551957753e+09  info    provider        kubernetes/controller_watch.go:32       Skipping watch  {"runner": "provider", "kind": "ClusterTrustBundle", "groupVersion": "certificates.k8s.io/v1beta1"}
+1.7890179551974292e+09  info    xds     runner/runner.go:162    loaded TLS certificate and key  {"runner": "xds"}
+1.789017955199234e+09   info    provider.controller-runtime.certwatcher certwatcher/certwatcher.go:214  Updated current TLS certificate {"runner": "provider", "cert": "/certs/tls.crt", "key": "/certs/tls.key"}
+1.789017955199474e+09   info    provider.controller-runtime.certwatcher certwatcher/certwatcher.go:136  Starting certificate poll+watcher       {"runner": "provider", "cert": "/certs/tls.crt", "key": "/certs/tls.key", "interval": 10}
