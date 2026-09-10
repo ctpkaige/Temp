@@ -1,28 +1,9 @@
-$ kubectl logs deploy/envoy-gateway -n envoy-gateway-system | grep xds
-1.7890217746740623e+09  info    cmd/server.go:307       Starting runner {"name": "xds"}
-1.789021774674414e+09   info    xds     runner/runner.go:162    loaded TLS certificate and key  {"runner": "xds"}
-1.7890217746744456e+09  info    xds     runner/runner.go:168    configured gRPC keepalive       {"runner": "xds", "maxConnectionAge": 36000, "maxConnectionAgeGrace": 120}
-1.7890217746746385e+09  info    xds     runner/runner.go:222    started {"runner": "xds"}
-1.7890217751939127e+09  info    xds     runner/runner.go:278    received an update      {"runner": "xds"}
-1.7890217914329689e+09  info    xds     runner/runner.go:278    received an update      {"runner": "xds"}
+$ kubectl get endpoints envoy-gateway -n envoy-gateway-system
+Warning: v1 Endpoints is deprecated in v1.33+; use discovery.k8s.io/v1 EndpointSlice
+NAME            ENDPOINTS                                                                AGE
+envoy-gateway   172.22.219.10:18002,172.22.219.10:9443,172.22.219.10:18000 + 2 more...   20m
 
-$ kubectl get svc -n envoy-gateway-system
-NAME                                             TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)                                            AGE
-envoy-envoy-gateway-system-eg-gateway-b87277ac   NodePort    172.16.127.203   <none>        80:30080/TCP                                       12m
-envoy-gateway                                    ClusterIP   172.17.23.189    <none>        18000/TCP,18001/TCP,18002/TCP,19001/TCP,9443/TCP   12m
-
-$ kubectl logs envoy-envoy-gateway-system-eg-gateway-b87277ac-7ff485958-sf26k -n envoy-gateway-system -c envoy | grep -i xds
-[2026-09-10 06:44:08.071][1][warning][config] [./source/extensions/config_subscription/grpc/grpc_stream.h:227] DeltaAggregatedResources gRPC config stream to xds_cluster closed since 35s ago: 14, no healthy upstream{no_healthy_upstream}
-[2026-09-10 06:44:11.346][1][warning][config] [./source/extensions/config_subscription/grpc/grpc_stream.h:227] DeltaAggregatedResources gRPC config stream to xds_cluster closed since 38s ago: 14, no healthy upstream{no_healthy_upstream}
-[2026-09-10 06:44:39.281][1][warning][config] [./source/extensions/config_subscription/grpc/grpc_stream.h:227] DeltaAggregatedResources gRPC config stream to xds_cluster closed since 66s ago: 14, no healthy upstream{no_healthy_upstream}
-[2026-09-10 06:44:41.093][1][warning][config] [./source/extensions/config_subscription/grpc/grpc_stream.h:227] DeltaAggregatedResources gRPC config stream to xds_cluster closed since 68s ago: 14, no healthy upstream{no_healthy_upstream}
-[2026-09-10 06:44:52.407][1][warning][config] [./source/extensions/config_subscription/grpc/grpc_stream.h:227] DeltaAggregatedResources gRPC config stream to xds_cluster closed since 79s ago: 14, no healthy upstream{no_healthy_upstream}
-[2026-09-10 06:45:15.896][1][warning][config] [./source/extensions/config_subscription/grpc/grpc_stream.h:227] DeltaAggregatedResources gRPC config stream to xds_cluster closed since 103s ago: 14, no healthy upstream{no_healthy_upstream}
-[2026-09-10 06:45:23.677][1][warning][config] [./source/extensions/config_subscription/grpc/grpc_stream.h:227] DeltaAggregatedResources gRPC config stream to xds_cluster closed since 111s ago: 14, no healthy upstream{no_healthy_upstream}
-[2026-09-10 06:45:25.540][1][warning][config] [./source/extensions/config_subscription/grpc/grpc_stream.h:227] DeltaAggregatedResources gRPC config stream to xds_cluster closed since 112s ago: 14, no healthy upstream{no_healthy_upstream}
-[2026-09-10 06:45:26.375][1][warning][config] [./source/extensions/config_subscription/grpc/grpc_stream.h:227] DeltaAggregatedResources gRPC config stream to xds_cluster closed since 113s ago: 14, no healthy upstream{no_healthy_upstream}
-[2026-09-10 06:45:28.510][1][warning][config] [./source/extensions/config_subscription/grpc/grpc_stream.h:227] DeltaAggregatedResources gRPC config stream to xds_cluster closed since 115s ago: 14, no healthy upstream{no_healthy_upstream}
-[2026-09-10 06:45:57.076][1][warning][config] [./source/extensions/config_subscription/grpc/grpc_stream.h:227] DeltaAggregatedResources gRPC config stream to xds_cluster closed since 144s ago: 14, no healthy upstream{no_healthy_upstream}
-[2026-09-10 06:46:19.346][1][warning][config] [./source/extensions/config_subscription/grpc/grpc_stream.h:227] DeltaAggregatedResources gRPC config stream to xds_cluster closed since 166s ago: 14, no healthy upstream{no_healthy_upstream}
-[2026-09-10 06:46:29.368][1][warning][config] [./source/extensions/config_subscription/grpc/grpc_stream.h:227] DeltaAggregatedResources gRPC config stream to xds_cluster closed since 176s ago: 14, no healthy upstream{no_healthy_upstream}
-[2026-09-10 06:46:47.196][1][warning][config] [./source/extensions/config_subscription/grpc/grpc_stream.h:227] DeltaAggregatedResources gRPC config stream to xds_cluster closed since 194s ago: 14, no healthy upstream{no_healthy_upstream}
+$ kubectl get pods -n envoy-gateway-system -o wide | grep envoy-gateway
+envoy-envoy-gateway-system-eg-gateway-b87277ac-656d8ffc7c-fjfx9   1/2     Running   1 (9m56s ago)   20m     172.21.188.41   ax-02   <none>           <none>
+envoy-envoy-gateway-system-eg-gateway-b87277ac-7ff485958-sf26k    1/2     Running   0               7m16s   172.22.219.21   ax-03   <none>           <none>
+envoy-gateway-7d8d9f9c5f-cggv5                          
