@@ -1,1 +1,19 @@
-Error: Recursion limit of 50 reached without hitting a stop condition. You can increase the limit by setting the `recursion_limit` config key. For troubleshooting, visit: https://docs.langchain.com/oss/python/langgraph/errors/GRAPH_RECURSION_LIMIT
+| 发布stage环境      | 开发                                       | 人工      | 部署stage                | stage环境可用                | dev测试通过的代码         | stage环境部署完成                   |                                                              |                                                              |
+| 客户测试           | 运营                                       | 人工      | Inspect Appr（验收邀请） | 客户验收通过                 | stage环境                 | 验收通过                            | 运营给客户发验收邀请，客户测试开发Comment 5.1：开发人员单元测试，综合测试完毕，自测结果通过。客户已在开发服务器上确认本次变更内容，测试通过运营Comment 5.2：最终验收结果录入（韩文填写）⚠️验收邀请后不可再提交代码需上传附件：单元测试/综合测试用例及结果_*.xls、Sonar_*.png(New Code列均为0)、SamScore_*.png、codebot_*.png、gitcommit_*.png、代码注释截图_*.png、IMPACT_ANALYSIS_*_GRAPH.html |                                                              |
+| 发布               | 生成TSG                                    | 开发      | AI（AAP TSG）            | 验收通过                     | TSG生成                   | 验收结果                            | TSG                                                          |                                                              |
+| 提发布邀请（审批） | 开发                                       | 人工      | Edit Issue               | Release Req Appr审批通过     | 测试结果sonar截图ddl, dml | 发布邀请审批完成                    | Edit Issue填写：Release Requests(devops发布的pipeline/Jenkins地址、DDL/DML情况)、Recovery Plan(回滚方案：①再次发布revert ②备份代码回滚 ③Cloud Console rollback)、Attachment(RlsReq:与Inspect阶段相同附件+DDL Request文档)、Comment模板(This release is about...Release date/Regular/Approval line/Release list/Release source version)审批路径：开发(起草)→品质部门安保担当(审批)→开发Part长(审批)→运营Cell Leader(协议)→PI(协议)→BA(协议)→[有DDL时]류대봉(协议)→西安Infra part长(协议)→Infra&QA(通报)→相关开发/运营担当(通报)⚠️有DDL时发布邀请标题中添加DDL字样。目前不再添加Group长审批 |                                                              |
+| 发布运营           | Infra                                      | 人工      | Create Release           | 发布完成                     | 发布邀请审批              | 生产环境发布                        | ⚠️Create Release必须在发布当日10点之前Target Project选择[GDC][SDS-RM]...PJT、Release Engineer、Regular Y/N运营Comment 7.1：运营点检功能完毕，功能正常，无对原有系统功能的影响 |                                                              |
+| 结束               | 关闭SR                                     | 运营      | 人工                     | 发布完成                     | SR关闭                    | 发布结果                            | SR关闭                                                       | 运营关闭SR                                                   |
+
+存在问题：
+
+1. 流程和开发过程不同步
+   要求SR时间不能超过一周，因此都是通过口头方式告知，开发直接进行设计开发。等开发一半或结束后，才会有SR走流程。
+2. 开发代码和流程无法关联
+   开发人员进行开发后，不会在jira或jsm上将任务登记，代码仅在开发人员本地，无法和相关任务关联。
+
+## 开发过程AI数据遥测现况
+
+已经有了遥测平台，每周4下午或周5早上，将git分支和AI PRO CLI SESSION填入遥测平台，平台通过CLI Hook获取获取SESSION的聊天内容，获取所有生成的代码，然后和git分支的代码进行匹配，计算出采纳的代码数量。
+
+其他阶段的AI使用情况，都是通过手动填入。
