@@ -1,32 +1,15 @@
-[INFO] 172.21.58.161:47737 - 21758 "AAAA IN kubernetes.default.svc.cluster.local.deer-flow.svc.cluster.local. udp 82 false 512" - - 0 0.00004893s
-[INFO] 172.21.58.161:47737 - 57849 "A IN kubernetes.default.svc.cluster.local.deer-flow.svc.cluster.local. udp 82 false 512" - - 0 0.000067371s
-[INFO] 172.21.58.161:47737 - 21758 "AAAA IN kubernetes.default.svc.cluster.local.deer-flow.svc.cluster.local. udp 82 false 512" - - 0 0.000022458s
-[INFO] 172.21.58.161:59537 - 15740 "AAAA IN kubernetes.default.svc.cluster.local.svc.cluster.local. udp 72 false 512" - - 0 0.000073577s
-[INFO] 172.21.58.161:59537 - 4986 "A IN kubernetes.default.svc.cluster.local.svc.cluster.local. udp 72 false 512" - - 0 0.000042884s
-[INFO] 172.21.58.161:47737 - 57849 "A IN kubernetes.default.svc.cluster.local.deer-flow.svc.cluster.local. udp 82 false 512" - - 0 0.000016464s
-[INFO] 172.21.58.161:34937 - 17770 "AAAA IN kubernetes.default.svc.cluster.local.cluster.local. udp 68 false 512" - - 0 0.000027186s
-[INFO] 172.21.58.161:59537 - 15740 "AAAA IN kubernetes.default.svc.cluster.local.svc.cluster.local. udp 72 false 512" - - 0 0.000014527s
-[INFO] 172.21.58.161:59537 - 4986 "A IN kubernetes.default.svc.cluster.local.svc.cluster.local. udp 72 false 512" - - 0 0.00002998s
-[INFO] 172.21.58.161:34937 - 29801 "A IN kubernetes.default.svc.cluster.local.cluster.local. udp 68 false 512" - - 0 0.000118662s
-[INFO] 172.21.58.161:41634 - 54178 "AAAA IN kubernetes.default.svc.cluster.local. udp 54 false 512" - - 0 0.000014838s
-[INFO] 172.21.58.161:34937 - 29801 "A IN kubernetes.default.svc.cluster.local.cluster.local. udp 68 false 512" - - 0 0.000013348s
-[INFO] 172.21.58.161:34937 - 17770 "AAAA IN kubernetes.default.svc.cluster.local.cluster.local. udp 68 false 512" - - 0 0.000025358s
-[INFO] 172.21.58.161:41634 - 4514 "A IN kubernetes.default.svc.cluster.local. udp 54 false 512" - - 0 0.000026415s
-[INFO] 172.21.58.161:41634 - 4514 "A IN kubernetes.default.svc.cluster.local. udp 54 false 512" - - 0 0.00001559s
-[INFO] 172.21.58.161:41634 - 54178 "AAAA IN kubernetes.default.svc.cluster.local. udp 54 false 512" - - 0 0.000027698s
-[INFO] 172.21.188.41:50831 - 20868 "AAAA IN envoy-gateway.envoy-gateway-system.svc.cluster.local. udp 81 false 1232" - - 0 0.000023535s
-[INFO] 172.21.188.41:58200 - 20868 "AAAA IN envoy-gateway.envoy-gateway-system.svc.cluster.local. udp 81 false 1232" - - 0 0.000020471s
-[INFO] 172.21.188.41:33613 - 20868 "AAAA IN envoy-gateway.envoy-gateway-system.svc.cluster.local. udp 81 false 1232" - - 0 0.000025057s
-[INFO] 172.21.188.41:44658 - 43784 "A IN envoy-gateway.envoy-gateway-system.svc.cluster.local. udp 81 false 1232" - - 0 0.000022846s
-[INFO] 172.21.188.41:41438 - 20868 "AAAA IN envoy-gateway.envoy-gateway-system.svc.cluster.local. udp 81 false 1232" - - 0 0.000014568s
-[INFO] 172.21.188.41:34654 - 43784 "A IN envoy-gateway.envoy-gateway-system.svc.cluster.local. udp 81 false 1232" - - 0 0.000014657s
-[INFO] 172.21.188.41:45888 - 43784 "A IN envoy-gateway.envoy-gateway-system.svc.cluster.local. udp 81 false 1232" - - 0 0.000023812s
-[INFO] 172.21.188.41:40850 - 43784 "A IN envoy-gateway.envoy-gateway-system.svc.cluster.local. udp 81 false 1232" - - 0 0.000016408s
-[INFO] 172.22.219.21:35954 - 10346 "AAAA IN envoy-gateway.envoy-gateway-system.svc.cluster.local. udp 81 false 1232" - - 0 0.000047485s
-[INFO] 172.22.219.21:54237 - 10346 "AAAA IN envoy-gateway.envoy-gateway-system.svc.cluster.local. udp 81 false 1232" - - 0 0.000129387s
-[INFO] 172.22.219.21:43822 - 10346 "AAAA IN envoy-gateway.envoy-gateway-system.svc.cluster.local. udp 81 false 1232" - - 0 0.000068456s
-[INFO] 172.22.219.21:56693 - 10346 "AAAA IN envoy-gateway.envoy-gateway-system.svc.cluster.local. udp 81 false 1232" - - 0 0.000041236s
-[INFO] 172.22.219.21:57106 - 7720 "A IN envoy-gateway.envoy-gateway-system.svc.cluster.local. udp 81 false 1232" - - 0 0.000027175s
-[INFO] 172.22.219.21:48245 - 7720 "A IN envoy-gateway.envoy-gateway-system.svc.cluster.local. udp 81 false 1232" - - 0 0.000032244s
-[INFO] 172.22.219.21:44765 - 7720 "A IN envoy-gateway.envoy-gateway-system.svc.cluster.local. udp 81 false 1232" - - 0 0.00003432s
-[INFO] 172.22.219.21:52147 - 7720 "A IN envoy-gateway.envoy-gateway-system.svc.cluster.local. udp 81 false 1232" - - 0 0.000032897s
+## SR开发流程现况
+
+- ### 运营
+
+| 阶段               | 任务                                       | 负责人    | 工作方式                 | 阶段开始标志                 | 阶段结束标志              | 输入                                | 输出                                                         | 备注                                                         |
+| :----------------- | :----------------------------------------- | :-------- | :----------------------- | :--------------------------- | :------------------------ | :---------------------------------- | :----------------------------------------------------------- | :----------------------------------------------------------- |
+| 需求接收           | 和客户对接，明确需求和开发沟通，确定可行性 | 运营      | 人工                     | 客户提出需求                 | 运营添加Comment 1.1       | PPT, Excel, 口头描述，邮件，message | PPT, Excel, 口头描述                                         | Comment 1.1：跟客户约定了发布日期，变更内容描述。如有补充请一并记录 |
+| 计划               | 可行性分析                                 | 运营+开发 | 人工+AI                  | 开发接收SR，分配经办人给自己 | Comment 2.1 + 2.2 完成    | 需求定义书                          | 计划Comment                                                  | 和开发沟通过，确定可行性和日程，确定后客户提SR–JSMSR持续时间不能超过1周，基本是开发完成后，再邀请客户提SR，走发布流程开发人员在这个阶段可能就进入设计开发阶段开发Comment 2.1：现在着手分析开发，并按照客户要求的上线日期发布运营Comment 2.2：已经确认好了需求。如有个别事项，建议补充 |
+| 分析/设计          | 需求标准化                                 | 运营      | 人工+AI                  | Comment 3.1                  | Comment 3.2               | 需求定义书                          | 分析设计Comment、CI列表                                      | JSM进行需求标准化开发Comment 3.1：该需求影响范围可控，需要对代码逻辑进行修改，存在修改表的必要，同时需要新开发部分代码。已完成需求的分析设计。主要对象CI：（添加CI list）运营Comment 3.2：因为是新增加的功能，对原有功能无影响，开发时希望考虑XX画面的查询性能 |
+| FP                 | 开发                                       | 人工      | 点击[Call FP]            | FP审批通过                   | FP信息                    | FP审批完成                          | IWMSFP录入步骤：Call FP → Open Function Item → Save → Cust App Req → Submit审批FP<10: 开发(起草)→运营担当(审批)→运营part长(审批)→BA(通报)FP≥10: 开发(起草)→运营担当(审批)→运营part长(审批)→BA(协议) |                                                              |
+| 功能设计           | 开发                                       | AI        | FP审批通过               | 点击[Complete Plan]          | 分析设计结果              | Complete Plan完成，进入开发阶段     | 可能和需求分析在一起录入共通作业者(service engineers)、确认发布日期(release scheduled) |                                                              |
+| 开发               | 功能开发                                   | 开发      | 人工+AI                  | 进入开发阶段                 | Comment 4.1               | 分析设计方案                        | 代码开发完成，部署到dev环境                                  | 开发过程中会产生JSM，将新分支进行管理开发Comment 4.1：已按照需求的分析设计完成了代码的开发，并且已部署到开发环境上以便测试。测试：完成了代码的单元测试，已经在开发环境上准备了测试数据，进行功能的综合测试 |
+| CodeReview         | 开发                                       | 人工+AI   | 创建代码分支             | Merge to master              | 开发代码                  | Merge完成的master分支               | JSM页面右侧GitHub→+→Create Branch（分支名建议为SR发布日期）首次需Add Github Personal Access Token（仅第一次）Commit注释模板：C Record / Date / Author / AS-IS / TO-BE创建Pull Request(Compare:新分支, Base:master, Title:SR Title, Reviewer:GitHub配置的Admin)→Reviewer Approved→Merge to master |                                                              |
+| 测试               | 发布dev环境                                | 开发      | 人工                     | 代码部署到dev                | dev环境可用               | Merge后的代码                       | dev环境部署完成                                              |                                                              |
+| 开发、运营测试     | 开发                                       | 人工+AI   | 单元测试+综合测试        | 测试通过                     | dev环境                   | 测试结果                            | 测出bug循环：开发-发布-测试E2E 测试skill，本地跑单元测试（当前开发功能）、综合测试（受影响功能），两者内容不可雷同 |                                                              |
